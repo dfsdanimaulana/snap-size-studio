@@ -180,7 +180,7 @@ export default function Cropper() {
     return (
         <>
             {!imgSrc && (
-                <div className="flex flex-col items-center gap-5 justify-center h-full">
+                <div className="w-full flex flex-col items-center gap-5 justify-center">
                     <h1 className="text-5xl tracking-wide font-bold py-5 text-slate-800">Crop IMAGE</h1>
                     <Button size="lg" onClick={() => inputRef.current?.click()}>
                         Select Image
@@ -190,8 +190,8 @@ export default function Cropper() {
             )}
 
             {!!imgSrc && (
-                <div className="flex h-full">
-                    <div className="basis-3/4 flex justify-center items-center">
+                <div className="flex flex-col md:flex-row h-full w-full">
+                    <div className="md:basis-3/4 grid place-items-center">
                         <ReactCrop
                             crop={crop}
                             onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -216,10 +216,10 @@ export default function Cropper() {
                         </ReactCrop>
                     </div>
 
-                    <div className="basis-1/4 flex flex-col gap-5 px-5 text-center bg-white">
+                    <div className="md:basis-1/4 flex flex-col gap-5 px-5 text-center bg-white">
                         <h2 className="text-2xl text-slate-700 font-bold py-3">Crop Options</h2>
                         <div className="flex items-center justify-between gap-3">
-                            <Label htmlFor="scale-input" className="text-lg">
+                            <Label htmlFor="scale-input" className="text-md md:text-lg">
                                 Scale:{' '}
                             </Label>
                             <Input
@@ -232,8 +232,8 @@ export default function Cropper() {
                                 className="w-[80px]"
                             />
                         </div>
-                        <div className="flex items-center justify-between gap-3">
-                            <Label htmlFor="rotate-input" className="text-lg">
+                        <div className="flex items-center justify-between gap-3 mb-5">
+                            <Label htmlFor="rotate-input" className="text-md md:text-lg">
                                 Rotate:{' '}
                             </Label>
                             <Input
@@ -245,9 +245,8 @@ export default function Cropper() {
                                 className="w-[80px]"
                             />
                         </div>
-
-                        <TooltipProvider>
-                            <Label htmlFor="rotate-input" className="text-lg flex">
+                        <div className="mb-5">
+                            <Label htmlFor="rotate-input" className="text-md md:text-lg flex mb-3">
                                 Aspect Ratio:{' '}
                             </Label>
                             <div className="flex items-center justify-center gap-5">
@@ -257,7 +256,7 @@ export default function Cropper() {
                                 {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
                                 {aspectButton('circle', <Circle />, 'Circle')}
                             </div>
-                        </TooltipProvider>
+                        </div>
                         <div className="mt-auto mb-5">
                             <Button onClick={onDownloadCropClick} size="lg">
                                 Download Crop
