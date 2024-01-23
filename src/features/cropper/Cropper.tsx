@@ -172,16 +172,48 @@ export default function Cropper() {
     }
 
     function handleCropWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setCrop({ ...crop, width: Number(e.target.value) } as Crop)
+        let { value } = e.target
+
+        if (Number(value) < 0) value = '0'
+
+        if (imgRef.current && Number(value) > imgRef.current?.width) {
+            value = imgRef.current?.width.toString()
+        }
+
+        setCrop({ ...crop, width: Number(value) } as Crop)
     }
     function handleCropHeightChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setCrop({ ...crop, height: Number(e.target.value) } as Crop)
+        let { value } = e.target
+
+        if (Number(value) < 0) value = '0'
+
+        if (imgRef.current && Number(value) > imgRef.current?.height) {
+            value = imgRef.current?.height.toString()
+        }
+
+        setCrop({ ...crop, height: Number(value) } as Crop)
     }
     function handleCropXChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setCrop({ ...crop, x: Number(e.target.value) } as Crop)
+        let { value } = e.target
+
+        if (Number(value) < 0) value = '0'
+
+        if (crop && imgRef.current && Number(value) + crop?.width > imgRef.current?.width) {
+            value = (imgRef.current?.width - crop?.width).toString()
+        }
+
+        setCrop({ ...crop, x: Number(value) } as Crop)
     }
     function handleCropYChange(e: React.ChangeEvent<HTMLInputElement>) {
-        setCrop({ ...crop, y: Number(e.target.value) } as Crop)
+        let { value } = e.target
+
+        if (Number(value) < 0) value = '0'
+
+        if (crop && imgRef.current && Number(value) + crop?.height > imgRef.current?.height) {
+            value = (imgRef.current?.height - crop?.height).toString()
+        }
+
+        setCrop({ ...crop, y: Number(value) } as Crop)
     }
 
     function aspectButton(aspect: AspectRatio, icon: ReactNode, tooltipText: string) {
@@ -216,7 +248,7 @@ export default function Cropper() {
                     <div className="md:basis-3/5 grid place-items-center bg-slate-200 dark:bg-slate-600">
                         <ReactCrop
                             crop={crop}
-                            onChange={(_, percentCrop) => setCrop(percentCrop)}
+                            onChange={(c) => setCrop(c)}
                             onComplete={(c) => setCompletedCrop(c)}
                             aspect={aspect}
                             // minWidth={400}
