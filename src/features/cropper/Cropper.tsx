@@ -252,6 +252,7 @@ export default function Cropper() {
                     <div className="md:basis-3/5 grid place-items-center bg-slate-200 dark:bg-slate-600">
                         <ReactCrop
                             crop={crop}
+                            ruleOfThirds
                             onChange={(c) => setCrop(c)}
                             onComplete={(c) => setCompletedCrop(c)}
                             aspect={aspect}
