@@ -7,18 +7,27 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import 'react-image-crop/dist/ReactCrop.css'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { Input } from '@/components/ui/input'
 import { BoxSelect, Circle, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
-import { TooltipProvider, Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
+import { Separator } from '@/components/ui/separator'
+import { CropInputOption } from './CropInputOption'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
 function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: number) {
+    // check which one is greater width or height
+    let width = 0
+    if (mediaWidth / aspect > mediaHeight) {
+        width = mediaHeight * aspect
+    } else {
+        width = mediaWidth
+    }
+
     return centerCrop(
         makeAspectCrop(
             {
-                unit: '%',
-                width: 90,
+                unit: 'px',
+                width,
             },
             aspect,
             mediaWidth,
@@ -162,6 +171,19 @@ export default function Cropper() {
         }
     }
 
+    function handleCropWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setCrop({ ...crop, width: Number(e.target.value) } as Crop)
+    }
+    function handleCropHeightChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setCrop({ ...crop, height: Number(e.target.value) } as Crop)
+    }
+    function handleCropXChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setCrop({ ...crop, x: Number(e.target.value) } as Crop)
+    }
+    function handleCropYChange(e: React.ChangeEvent<HTMLInputElement>) {
+        setCrop({ ...crop, y: Number(e.target.value) } as Crop)
+    }
+
     function aspectButton(aspect: AspectRatio, icon: ReactNode, tooltipText: string) {
         return (
             <Tooltip key={aspect}>
@@ -191,7 +213,7 @@ export default function Cropper() {
 
             {!!imgSrc && (
                 <div className="flex flex-col md:flex-row h-full w-full">
-                    <div className="md:basis-3/4 grid place-items-center">
+                    <div className="md:basis-3/5 grid place-items-center bg-slate-100">
                         <ReactCrop
                             crop={crop}
                             onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -216,47 +238,70 @@ export default function Cropper() {
                         </ReactCrop>
                     </div>
 
-                    <div className="md:basis-1/4 flex flex-col gap-5 px-5 text-center bg-white">
-                        <h2 className="text-2xl text-slate-700 font-bold py-3">Crop Options</h2>
-                        <div className="flex items-center justify-between gap-3">
-                            <Label htmlFor="scale-input" className="text-md md:text-lg">
-                                Scale:{' '}
-                            </Label>
-                            <Input
-                                id="scale-input"
-                                type="number"
-                                step="0.1"
-                                value={scale}
-                                disabled={!imgSrc}
-                                onChange={(e) => setScale(Number(e.target.value))}
-                                className="w-[80px]"
-                            />
-                        </div>
-                        <div className="flex items-center justify-between gap-3 mb-5">
-                            <Label htmlFor="rotate-input" className="text-md md:text-lg">
-                                Rotate:{' '}
-                            </Label>
-                            <Input
-                                id="rotate-input"
-                                type="number"
-                                value={rotate}
-                                disabled={!imgSrc}
-                                onChange={(e) => setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))}
-                                className="w-[80px]"
-                            />
-                        </div>
-                        <div className="mb-5">
-                            <Label htmlFor="rotate-input" className="text-md md:text-lg flex mb-3">
-                                Aspect Ratio:{' '}
-                            </Label>
-                            <div className="flex items-center justify-center gap-5">
-                                {aspectButton('custom', <BoxSelect />, 'Custom')}
-                                {aspectButton('square', <Square />, '1 / 1')}
-                                {aspectButton('horizontal', <RectangleHorizontal />, '16 / 9')}
-                                {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
-                                {aspectButton('circle', <Circle />, 'Circle')}
+                    <div className="md:basis-2/5 flex flex-col gap-5 px-5 text-center bg-white">
+                        <h2 className="text-2xl text-slate-700 font-bold mt-3">Crop Options</h2>
+                        <Separator />
+                        <div className="flex-1 flex flex-col">
+                            <div className="flex-1 flex">
+                                <div className="basis-1/2 px-3 flex flex-col gap-2">
+                                    <CropInputOption
+                                        id="width-crop-input"
+                                        label="Width (px)"
+                                        value={Math.round(crop?.width ?? 0)}
+                                        onChange={handleCropWidthChange}
+                                    />
+                                    <CropInputOption
+                                        id="height-crop-input"
+                                        label="Height (px)"
+                                        value={Math.round(crop?.height ?? 0)}
+                                        onChange={handleCropHeightChange}
+                                    />
+                                    <CropInputOption
+                                        id="x-crop-input"
+                                        label="Position X (px)"
+                                        value={Math.round(crop?.x ?? 0)}
+                                        onChange={handleCropXChange}
+                                    />
+                                    <CropInputOption
+                                        id="y-crop-input"
+                                        label="Position Y (px)"
+                                        value={Math.round(crop?.y ?? 0)}
+                                        onChange={handleCropYChange}
+                                    />
+                                </div>
+                                <div className="basis-1/2 px-3 flex flex-col gap-2">
+                                    <CropInputOption
+                                        id="scale-input"
+                                        label="Scale:"
+                                        value={scale}
+                                        disabled={!imgSrc}
+                                        onChange={(e) => setScale(Number(e.target.value))}
+                                        step="0.1"
+                                    />
+                                    <CropInputOption
+                                        id="rotate-input"
+                                        label="Rotate:"
+                                        value={rotate}
+                                        disabled={!imgSrc}
+                                        onChange={(e) => setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))}
+                                    />
+                                </div>
+                            </div>
+                            <div>
+                                <Label htmlFor="rotate-input" className="text-md flex mb-3">
+                                    Aspect Ratio:{' '}
+                                </Label>
+                                <div className="flex items-center justify-center gap-5">
+                                    {aspectButton('custom', <BoxSelect />, 'Custom')}
+                                    {aspectButton('square', <Square />, '1 / 1')}
+                                    {aspectButton('horizontal', <RectangleHorizontal />, '16 / 9')}
+                                    {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
+                                    {aspectButton('circle', <Circle />, 'Circle')}
+                                </div>
                             </div>
                         </div>
+
+                        <Separator />
                         <div className="mt-auto mb-5">
                             <Button onClick={onDownloadCropClick} size="lg">
                                 Download Crop
