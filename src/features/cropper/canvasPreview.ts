@@ -53,16 +53,13 @@ export async function canvasPreview(
     ctx.translate(-centerX, -centerY)
 
     if (circularCrop) {
-        ctx.translate(cropX, cropY)
 
         // Draw the circular crop
-        const radius = Math.min(canvas.width, canvas.height)
+        const radius = Math.min(crop.width*scaleX, crop.height*scaleY)/2
         ctx.beginPath()
-        ctx.arc(radius / 2, radius / 2, radius / 2, 0, 2 * Math.PI)
+        ctx.arc(cropX + radius, cropY + radius, radius, 0, 2 * Math.PI)
         ctx.closePath()
         ctx.clip()
-
-        ctx.translate(-cropX, -cropY)
 
         ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)
     } else {
