@@ -203,7 +203,7 @@ export default function Cropper() {
         <>
             {!imgSrc && (
                 <div className="w-full flex flex-col items-center gap-5 justify-center">
-                    <h1 className="text-5xl tracking-wide font-bold py-5 text-slate-800">Crop IMAGE</h1>
+                    <h1 className="text-5xl tracking-wide font-bold py-5">Crop IMAGE</h1>
                     <Button size="lg" onClick={() => inputRef.current?.click()}>
                         Select Image
                     </Button>
@@ -213,7 +213,7 @@ export default function Cropper() {
 
             {!!imgSrc && (
                 <div className="flex flex-col md:flex-row h-full w-full">
-                    <div className="md:basis-3/5 grid place-items-center bg-slate-100">
+                    <div className="md:basis-3/5 grid place-items-center bg-slate-200 dark:bg-slate-600">
                         <ReactCrop
                             crop={crop}
                             onChange={(_, percentCrop) => setCrop(percentCrop)}
@@ -238,11 +238,11 @@ export default function Cropper() {
                         </ReactCrop>
                     </div>
 
-                    <div className="md:basis-2/5 flex flex-col gap-5 px-5 text-center bg-white">
-                        <h2 className="text-2xl text-slate-700 font-bold mt-3">Crop Options</h2>
+                    <div className="md:basis-2/5 flex flex-col gap-5 px-5 text-center bg-slate-100 dark:bg-slate-700">
+                        <h2 className="text-2xl font-bold mt-3">Crop Options</h2>
                         <Separator />
                         <div className="flex-1 flex flex-col">
-                            <div className="flex-1 flex">
+                            <div className="flex-1 flex mb-3">
                                 <div className="basis-1/2 px-3 flex flex-col gap-2">
                                     <CropInputOption
                                         id="width-crop-input"
@@ -303,7 +303,7 @@ export default function Cropper() {
 
                         <Separator />
                         <div className="mt-auto mb-5">
-                            <Button onClick={onDownloadCropClick} size="lg">
+                            <Button onClick={onDownloadCropClick} size="lg" className="text-lg">
                                 Download Crop
                             </Button>
                             <a href="#hidden" ref={hiddenAnchorRef} download className="hidden">
