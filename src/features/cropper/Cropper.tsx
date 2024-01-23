@@ -278,7 +278,7 @@ export default function Cropper() {
                         <h2 className="text-2xl font-bold mt-3">Crop Options</h2>
                         <Separator />
                         <div className="flex-1 flex flex-col">
-                            <div className="flex-1 flex mb-3">
+                            <div className="flex mb-5">
                                 <div className="basis-1/2 px-3 flex flex-col gap-2">
                                     <CropInputOption
                                         id="width-crop-input"
