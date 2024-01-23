@@ -128,6 +128,11 @@ export default function Cropper() {
         if (value === 'custom') {
             setAspect(undefined)
         } else if (value === 'square' || value === 'circle') {
+            if(value === 'circle') {
+              setScale(1)
+              setRotate(0)
+              setFlip({ horizontal: false, vertical: false })
+            }
             setAspect(1 / 1)
             if (imgRef.current) {
                 const { width, height } = imgRef.current
@@ -298,7 +303,7 @@ export default function Cropper() {
                                         id="scale-input"
                                         label="Scale:"
                                         value={scale}
-                                        disabled={!imgSrc}
+                                        disabled={!imgSrc || circularCrop}
                                         onChange={(e) => setScale(Number(e.target.value))}
                                         step="0.1"
                                     />
@@ -306,19 +311,21 @@ export default function Cropper() {
                                         id="rotate-input"
                                         label="Rotate:"
                                         value={rotate}
-                                        disabled={!imgSrc}
+                                        disabled={!imgSrc || circularCrop}
                                         onChange={(e) => setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))}
                                     />
                                     <CropSwitchOption
                                         id="flip-horizontal"
                                         label="Flip X"
                                         checked={flip.horizontal}
+                                        disabled={circularCrop}
                                         onCheckedChange={(checked) => setFlip({ horizontal: checked, vertical: flip.vertical })}
                                     />
                                     <CropSwitchOption
                                         id="flip-vertical"
                                         label="Flip Y"
                                         checked={flip.vertical}
+                                        disabled={circularCrop}
                                         onCheckedChange={(checked) => setFlip({ horizontal: flip.horizontal, vertical: checked })}
                                     />
                                 </div>

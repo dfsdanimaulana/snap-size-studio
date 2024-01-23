@@ -6,14 +6,15 @@ interface CustomInputProps {
     id: string
     label: string
     checked: boolean
+    disabled?: boolean
     onCheckedChange: (checked: boolean) => void
 }
 
-export const CropSwitchOption: React.FC<CustomInputProps> = ({ id, label, checked, onCheckedChange }) => (
+export const CropSwitchOption: React.FC<CustomInputProps> = ({ id, label, checked, disabled = false, onCheckedChange }) => (
     <div className="flex items-center justify-between mt-3">
         <Label htmlFor={id} className="text-md">
             {label}
         </Label>
-        <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} className="mr-3" />
+        <Switch id={id} checked={checked} onCheckedChange={onCheckedChange} className="mr-3" disabled={disabled}/>
     </div>
 )
