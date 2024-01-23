@@ -2,7 +2,15 @@ import { PixelCrop } from 'react-image-crop'
 
 const TO_RADIANS = Math.PI / 180
 
-export async function canvasPreview(image: HTMLImageElement, canvas: HTMLCanvasElement, crop: PixelCrop, scale = 1, rotate = 0) {
+export async function canvasPreview(
+    image: HTMLImageElement,
+    canvas: HTMLCanvasElement,
+    crop: PixelCrop,
+    scale = 1,
+    rotate = 0,
+    flip: { horizontal: boolean; vertical: boolean } = { horizontal: false, vertical: false },
+    circularCrop = false,
+) {
     const ctx = canvas.getContext('2d')
 
     if (!ctx) {
@@ -40,10 +48,26 @@ export async function canvasPreview(image: HTMLImageElement, canvas: HTMLCanvasE
     // 3) Rotate around the origin
     ctx.rotate(rotateRads)
     // 2) Scale the image
-    ctx.scale(scale, scale)
+    ctx.scale(flip.horizontal ? -scale : scale, flip.vertical ? -scale : scale)
     // 1) Move the center of the image to the origin (0,0)
     ctx.translate(-centerX, -centerY)
-    ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)
+
+    if (circularCrop) {
+        ctx.translate(cropX, cropY)
+
+        // Draw the circular crop
+        const radius = Math.min(canvas.width, canvas.height)
+        ctx.beginPath()
+        ctx.arc(radius / 2, radius / 2, radius / 2, 0, 2 * Math.PI)
+        ctx.closePath()
+        ctx.clip()
+
+        ctx.translate(-cropX, -cropY)
+
+        ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)
+    } else {
+        ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)
+    }
 
     ctx.restore()
 }

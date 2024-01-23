@@ -12,6 +12,7 @@ import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip
 import { Separator } from '@/components/ui/separator'
 import { CropInputOption } from './CropInputOption'
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from '@/components/ui/select'
+import { CropSwitchOption } from './CropSwitchOption'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -55,6 +56,7 @@ export default function Cropper() {
     const [rotate, setRotate] = useState(0)
     const [aspect, setAspect] = useState<number | undefined>(16 / 9)
     const [circularCrop, setCircularCrop] = useState(false)
+    const [flip, setFlip] = useState({ horizontal: false, vertical: false })
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
@@ -91,25 +93,8 @@ export default function Cropper() {
             throw new Error('No 2d context')
         }
 
-        if (circularCrop) {
-            ctx.save()
-            // Draw the circular crop
-            const centerX = offscreen.width / 2
-            const centerY = offscreen.height / 2
-            const radius = Math.min(centerX, centerY)
-            ctx.beginPath()
-            ctx.arc(centerX, centerY, radius, 0, 2 * Math.PI)
-            ctx.closePath()
-            ctx.clip()
-        }
-
         ctx.drawImage(previewCanvas, 0, 0, previewCanvas.width, previewCanvas.height, 0, 0, offscreen.width, offscreen.height)
 
-        // Reset the clip to avoid affecting future draws
-
-        if (circularCrop) {
-            ctx.restore()
-        }
         // You might want { type: "image/jpeg", quality: <0 to 1> } to
         // reduce image size
         const blob = await offscreen.convertToBlob({
@@ -128,11 +113,11 @@ export default function Cropper() {
         async () => {
             if (completedCrop?.width && completedCrop?.height && imgRef.current && previewCanvasRef.current) {
                 // We use canvasPreview as it's much faster than imgPreview.
-                canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate)
+                canvasPreview(imgRef.current, previewCanvasRef.current, completedCrop, scale, rotate, flip, circularCrop)
             }
         },
         100,
-        [completedCrop, scale, rotate],
+        [completedCrop, scale, rotate, flip],
     )
 
     type AspectRatio = 'custom' | 'square' | 'horizontal' | 'vertical' | 'circle'
@@ -269,7 +254,9 @@ export default function Cropper() {
                                 alt="Crop me"
                                 src={imgSrc}
                                 className="w-full h-auto"
-                                style={{ transform: `scale(${scale}) rotate(${rotate}deg)` }}
+                                style={{
+                                    transform: `scale(${flip.horizontal ? -scale : scale},${flip.vertical ? -scale : scale}) rotate(${rotate}deg)`,
+                                }}
                                 onLoad={onImageLoad}
                             />
                         </ReactCrop>
@@ -322,6 +309,18 @@ export default function Cropper() {
                                         disabled={!imgSrc}
                                         onChange={(e) => setRotate(Math.min(180, Math.max(-180, Number(e.target.value))))}
                                     />
+                                    <CropSwitchOption
+                                        id="flip-horizontal"
+                                        label="Flip X"
+                                        checked={flip.horizontal}
+                                        onCheckedChange={(checked) => setFlip({ horizontal: checked, vertical: flip.vertical })}
+                                    />
+                                    <CropSwitchOption
+                                        id="flip-vertical"
+                                        label="Flip Y"
+                                        checked={flip.vertical}
+                                        onCheckedChange={(checked) => setFlip({ horizontal: flip.horizontal, vertical: checked })}
+                                    />
                                 </div>
                             </div>
                             <div className="px-3">
@@ -365,7 +364,7 @@ export default function Cropper() {
             )}
             {!!completedCrop && (
                 <>
-                    <div className="hidden">
+                    <div className="block">
                         <canvas
                             ref={previewCanvasRef}
                             style={{
