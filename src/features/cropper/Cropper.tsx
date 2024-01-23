@@ -11,6 +11,7 @@ import { BoxSelect, Circle, RectangleHorizontal, RectangleVertical, Square } fro
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
 import { CropInputOption } from './CropInputOption'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from '@/components/ui/select'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -38,8 +39,11 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: numbe
     )
 }
 
+type ImageType = 'image/png' | 'image/jpeg' | 'image/webp'
+
 export default function Cropper() {
     const [imgSrc, setImgSrc] = useState('')
+    const [imgType, setImgType] = useState<ImageType>('image/png')
     const previewCanvasRef = useRef<HTMLCanvasElement>(null)
     const imgRef = useRef<HTMLImageElement>(null)
     const inputRef = useRef<HTMLInputElement>(null)
@@ -109,7 +113,7 @@ export default function Cropper() {
         // You might want { type: "image/jpeg", quality: <0 to 1> } to
         // reduce image size
         const blob = await offscreen.convertToBlob({
-            type: 'image/png',
+            type: imgType,
         })
 
         if (blobUrlRef.current) {
@@ -319,8 +323,8 @@ export default function Cropper() {
                                     />
                                 </div>
                             </div>
-                            <div>
-                                <Label htmlFor="rotate-input" className="text-md flex mb-3">
+                            <div className="px-3">
+                                <Label htmlFor="rotate-input" className="text-md flex mb-2">
                                     Aspect Ratio:{' '}
                                 </Label>
                                 <div className="flex items-center justify-center gap-5">
@@ -334,10 +338,23 @@ export default function Cropper() {
                         </div>
 
                         <Separator />
-                        <div className="mt-auto mb-5">
+                        <div className="flex items-center justify-center gap-3 pb-5">
                             <Button onClick={onDownloadCropClick} size="lg" className="text-lg">
                                 Download Crop
                             </Button>
+                            <Select onValueChange={(value: ImageType) => setImgType(value)} defaultValue={imgType}>
+                                <SelectTrigger className="w-[100px]">
+                                    <SelectValue placeholder="PNG" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectGroup>
+                                        <SelectLabel>Image Type</SelectLabel>
+                                        <SelectItem value="image/png">PNG</SelectItem>
+                                        <SelectItem value="image/jpeg">JPEG</SelectItem>
+                                        <SelectItem value="image/webp">WEBP</SelectItem>
+                                    </SelectGroup>
+                                </SelectContent>
+                            </Select>
                             <a href="#hidden" ref={hiddenAnchorRef} download className="hidden">
                                 Hidden download
                             </a>
