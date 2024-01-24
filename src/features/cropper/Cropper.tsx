@@ -54,7 +54,7 @@ export default function Cropper() {
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
     const [scale, setScale] = useState(1)
     const [rotate, setRotate] = useState(0)
-    const [aspect, setAspect] = useState<number | undefined>(19/6)
+    const [aspect, setAspect] = useState<number | undefined>(1)
     const [circularCrop, setCircularCrop] = useState(false)
     const [flip, setFlip] = useState({ horizontal: false, vertical: false })
 
