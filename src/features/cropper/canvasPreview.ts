@@ -28,6 +28,8 @@ export async function canvasPreview(
 
     canvas.width = Math.floor(crop.width * scaleX * pixelRatio)
     canvas.height = Math.floor(crop.height * scaleY * pixelRatio)
+    canvas.style.margin = "0"
+    canvas.style.padding = "0"
 
     ctx.scale(pixelRatio, pixelRatio)
     ctx.imageSmoothingQuality = 'high'
