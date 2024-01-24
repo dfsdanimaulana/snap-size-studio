@@ -367,22 +367,20 @@ export default function Cropper() {
                             </a>
                         </div>
                     </div>
+                     {!!completedCrop && (
+                        <div className="flex items-center justify-center p-3">
+                            <canvas
+                                ref={previewCanvasRef}
+                                style={{
+                                    border: '1px solid black',
+                                    objectFit: 'contain',
+                                    width: completedCrop.width,
+                                    height: completedCrop.height,
+                                }}
+                            />
+                        </div>
+                    )}
                 </div>
-            )}
-            {!!completedCrop && (
-                <>
-                    <div className="block">
-                        <canvas
-                            ref={previewCanvasRef}
-                            style={{
-                                border: '1px solid black',
-                                objectFit: 'contain',
-                                width: completedCrop.width,
-                                height: completedCrop.height,
-                            }}
-                        />
-                    </div>
-                </>
             )}
         </>
     )
