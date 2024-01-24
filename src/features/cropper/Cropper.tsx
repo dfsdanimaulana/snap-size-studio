@@ -7,7 +7,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import 'react-image-crop/dist/ReactCrop.css'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { BoxSelect, Circle, CircleDashed, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
+import { BoxSelect, Circle, CircleDashed, Loader2, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
 import { CropInputOption } from './CropInputOption'
@@ -57,6 +57,7 @@ export default function Cropper() {
     const [aspect, setAspect] = useState<number | undefined>(1)
     const [circularCrop, setCircularCrop] = useState(false)
     const [flip, setFlip] = useState({ horizontal: false, vertical: false })
+    const [isLoading, setIsLoading] = useState(false)
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
@@ -75,6 +76,7 @@ export default function Cropper() {
     }
 
     async function onDownloadCropClick() {
+        setIsLoading(true)
         const image = imgRef.current
         const previewCanvas = previewCanvasRef.current
         if (!image || !previewCanvas || !completedCrop) {
@@ -107,6 +109,7 @@ export default function Cropper() {
         blobUrlRef.current = URL.createObjectURL(blob)
         hiddenAnchorRef.current!.href = blobUrlRef.current
         hiddenAnchorRef.current!.click()
+        setIsLoading(false)
     }
 
     useDebounceEffect(
@@ -120,7 +123,7 @@ export default function Cropper() {
         [completedCrop, scale, rotate, flip],
     )
 
-    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle'| 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical' 
+    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
 
     function handleToggleAspectClick(value: AspectRatio) {
         const resetTransformations = () => {
@@ -128,10 +131,10 @@ export default function Cropper() {
             setRotate(0)
             setFlip({ horizontal: false, vertical: false })
         }
-    
+
         const setAspectAndCrop = (aspect: number) => {
             setAspect(aspect)
-    
+
             if (imgRef.current) {
                 const { width, height } = imgRef.current
                 const newCrop = centerAspectCrop(width, height, aspect)
@@ -139,9 +142,9 @@ export default function Cropper() {
                 setCompletedCrop(convertToPixelCrop(newCrop, width, height))
             }
         }
-    
+
         setCircularCrop(value === 'circle' || value === 'custom_circle')
-    
+
         switch (value) {
             case 'custom':
                 setAspect(undefined)
@@ -171,7 +174,7 @@ export default function Cropper() {
                 break
         }
     }
-    
+
     function handleCropWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
         let { value } = e.target
 
@@ -253,9 +256,6 @@ export default function Cropper() {
                             onChange={(c) => setCrop(c)}
                             onComplete={(c) => setCompletedCrop(c)}
                             aspect={aspect}
-                            // minWidth={400}
-                            minHeight={100}
-                            // circularCrop
                             style={{
                                 maxHeight: '70vh',
                             }}
@@ -338,9 +338,9 @@ export default function Cropper() {
                             </div>
                             <div className="px-3">
                                 <div className="flex items-center justify-between gap-3 pb-3">
-                                  <Label htmlFor="rotate-input" className="text-md flex mb-2">
-                                      Aspect Ratio:{' '}
-                                  </Label>
+                                    <Label htmlFor="rotate-input" className="text-md flex mb-2">
+                                        Aspect Ratio:{' '}
+                                    </Label>
                                 </div>
                                 <div className="flex items-center justify-center gap-1 md:gap-5">
                                     {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
@@ -357,9 +357,16 @@ export default function Cropper() {
 
                         <Separator />
                         <div className="flex items-center justify-center gap-3 pb-5">
-                            <Button onClick={onDownloadCropClick} size="lg" className="text-lg">
-                                Download Crop
-                            </Button>
+                            {isLoading ? (
+                                <Button disabled size="lg" className="text-lg">
+                                    <Loader2 className="mr-2 animate-spin" />
+                                    Please wait
+                                </Button>
+                            ) : (
+                                <Button onClick={onDownloadCropClick} size="lg" className="text-lg">
+                                    Download Crop
+                                </Button>
+                            )}
                             <Select onValueChange={(value: ImageType) => setImgType(value)} defaultValue={imgType}>
                                 <SelectTrigger className="w-[100px]">
                                     <SelectValue placeholder="PNG" />
@@ -378,7 +385,7 @@ export default function Cropper() {
                             </a>
                         </div>
                     </div>
-                     {!!completedCrop && (
+                    {!!completedCrop && (
                         <div className="hidden items-center justify-center p-3">
                             <canvas
                                 ref={previewCanvasRef}
