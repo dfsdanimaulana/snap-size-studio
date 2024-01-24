@@ -55,12 +55,26 @@ export async function canvasPreview(
     ctx.translate(-centerX, -centerY)
 
     if (circularCrop) {
+      if (crop.width === crop.height){
         // Draw the circular crop
         const radius = Math.min(crop.width*scaleX, crop.height*scaleY)/2
+        const x = cropX + radius
+        const y = cropY + radius
         ctx.beginPath()
-        ctx.arc(cropX + radius, cropY + radius, radius, 0, 2 * Math.PI)
+        ctx.arc(x, y, radius, 0, 2 * Math.PI)
         ctx.closePath()
         ctx.clip()
+      } else {
+        // Draw ellipse crop
+        const radiusX = crop.width*scaleX/2
+        const radiusY = crop.height*scaleY/2
+        const x = cropX + radiusX
+        const y = cropY + radiusY
+        ctx.beginPath()
+        ctx.ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI)
+        ctx.closePath()
+        ctx.clip()
+      }
     } 
     
     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)

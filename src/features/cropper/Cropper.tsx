@@ -7,7 +7,7 @@ import { useDebounceEffect } from '../../hooks/useDebounceEffect'
 import 'react-image-crop/dist/ReactCrop.css'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { BoxSelect, Circle, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
+import { BoxSelect, Circle, CircleDashed, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
 import { CropInputOption } from './CropInputOption'
@@ -54,7 +54,7 @@ export default function Cropper() {
     const [completedCrop, setCompletedCrop] = useState<PixelCrop>()
     const [scale, setScale] = useState(1)
     const [rotate, setRotate] = useState(0)
-    const [aspect, setAspect] = useState<number | undefined>(16 / 9)
+    const [aspect, setAspect] = useState<number | undefined>(19/6)
     const [circularCrop, setCircularCrop] = useState(false)
     const [flip, setFlip] = useState({ horizontal: false, vertical: false })
 
@@ -120,12 +120,17 @@ export default function Cropper() {
         [completedCrop, scale, rotate, flip],
     )
 
-    type AspectRatio = 'custom' | 'square' | 'horizontal' | 'vertical' | 'circle'
+    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'horizontal' | 'vertical' | 'circle'
 
     function handleToggleAspectClick(value: AspectRatio) {
-        setCircularCrop(value === 'circle')
+        setCircularCrop(value === 'circle' || value === 'custom_circle')
 
         if (value === 'custom') {
+            setAspect(undefined)
+        } else if (value === 'custom_circle') {
+            setScale(1)
+            setRotate(0)
+            setFlip({ horizontal: false, vertical: false })
             setAspect(undefined)
         } else if (value === 'square' || value === 'circle') {
             if(value === 'circle') {
@@ -331,15 +336,18 @@ export default function Cropper() {
                                 </div>
                             </div>
                             <div className="px-3">
-                                <Label htmlFor="rotate-input" className="text-md flex mb-2">
-                                    Aspect Ratio:{' '}
-                                </Label>
+                                <div className="flex items-center justify-between gap-3 pb-3">
+                                  <Label htmlFor="rotate-input" className="text-md flex mb-2">
+                                      Aspect Ratio:{' '}
+                                  </Label>
+                                </div>
                                 <div className="flex items-center justify-center gap-5">
-                                    {aspectButton('custom', <BoxSelect />, 'Custom')}
+                                    {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
+                                    {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
                                     {aspectButton('square', <Square />, '1 / 1')}
+                                    {aspectButton('circle', <Circle />, 'Circle')}
                                     {aspectButton('horizontal', <RectangleHorizontal />, '16 / 9')}
                                     {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
-                                    {aspectButton('circle', <Circle />, 'Circle')}
                                 </div>
                             </div>
                         </div>
@@ -368,7 +376,7 @@ export default function Cropper() {
                         </div>
                     </div>
                      {!!completedCrop && (
-                        <div className="flex items-center justify-center p-3">
+                        <div className="hidden items-center justify-center p-3">
                             <canvas
                                 ref={previewCanvasRef}
                                 style={{
