@@ -42,6 +42,19 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: numbe
 
 type ImageType = 'image/png' | 'image/jpeg' | 'image/webp'
 
+type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
+
+const aspectRatioValues: Record<AspectRatio, number | undefined> = {
+    custom: undefined,
+    custom_circle: undefined,
+    square: 1,
+    circle: 1,
+    short_horizontal: 5 / 4,
+    short_vertical: 4 / 5,
+    horizontal: 16 / 9,
+    vertical: 9 / 16,
+}
+
 export default function Cropper() {
     const [imgSrc, setImgSrc] = useState('')
     const [imgType, setImgType] = useState<ImageType>('image/png')
@@ -58,6 +71,7 @@ export default function Cropper() {
     const [circularCrop, setCircularCrop] = useState(false)
     const [flip, setFlip] = useState({ horizontal: false, vertical: false })
     const [isLoading, setIsLoading] = useState(false)
+    const [chosenAspect, setChosenAspect] = useState<AspectRatio>('square')
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
@@ -123,8 +137,6 @@ export default function Cropper() {
         [completedCrop, scale, rotate, flip],
     )
 
-    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
-
     function handleToggleAspectClick(value: AspectRatio) {
         const resetTransformations = () => {
             setScale(1)
@@ -132,8 +144,10 @@ export default function Cropper() {
             setFlip({ horizontal: false, vertical: false })
         }
 
-        const setAspectAndCrop = (aspect: number) => {
+        const setAspectAndCrop = (aspect: number | undefined) => {
             setAspect(aspect)
+
+            if (aspect === undefined) return
 
             if (imgRef.current) {
                 const { width, height } = imgRef.current
@@ -145,34 +159,9 @@ export default function Cropper() {
 
         setCircularCrop(value === 'circle' || value === 'custom_circle')
 
-        switch (value) {
-            case 'custom':
-                setAspect(undefined)
-                break
-            case 'custom_circle':
-                resetTransformations()
-                setAspect(undefined)
-                break
-            case 'square':
-            case 'circle':
-                if (value === 'circle') resetTransformations()
-                setAspectAndCrop(1 / 1)
-                break
-            case 'short_horizontal':
-                setAspectAndCrop(5 / 4)
-                break
-            case 'short_vertical':
-                setAspectAndCrop(4 / 5)
-                break
-            case 'horizontal':
-                setAspectAndCrop(16 / 9)
-                break
-            case 'vertical':
-                setAspectAndCrop(9 / 16)
-                break
-            default:
-                break
-        }
+        if (value === 'circle' || value === 'custom_circle') resetTransformations()
+
+        setAspectAndCrop(aspectRatioValues[value])
     }
 
     function handleCropWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -220,11 +209,21 @@ export default function Cropper() {
         setCrop({ ...crop, y: Number(value) } as Crop)
     }
 
-    function aspectButton(aspect: AspectRatio, icon: ReactNode, tooltipText: string) {
+    function aspectButton(asp: AspectRatio, icon: ReactNode, tooltipText: string) {
+        const handleClick = () => {
+            setChosenAspect(asp)
+            handleToggleAspectClick(asp)
+        }
+
         return (
-            <Tooltip key={aspect}>
+            <Tooltip key={asp}>
                 <TooltipTrigger asChild>
-                    <Button variant="outline" size="icon" onClick={() => handleToggleAspectClick(aspect)}>
+                    <Button
+                        variant="outline"
+                        size="icon"
+                        className={asp === chosenAspect ? 'border border-slate-900 dark:border-white/80' : ''}
+                        onClick={handleClick}
+                    >
                         {icon}
                     </Button>
                 </TooltipTrigger>
@@ -349,8 +348,8 @@ export default function Cropper() {
                                     {aspectButton('circle', <Circle />, 'Circle')}
                                     {aspectButton('short_horizontal', <RectangleHorizontal />, '5 / 4')}
                                     {aspectButton('short_vertical', <RectangleVertical />, '4 / 5')}
-                                    {aspectButton('horizontal', <RectangleHorizontal />, '16 / 9')}
-                                    {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
+                                    {aspectButton('horizontal', <RectangleHorizontal width={20} />, '16 / 9')}
+                                    {aspectButton('vertical', <RectangleVertical width={20} />, '9 / 16')}
                                 </div>
                             </div>
                         </div>
