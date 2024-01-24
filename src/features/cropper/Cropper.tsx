@@ -244,7 +244,7 @@ export default function Cropper() {
 
             {!!imgSrc && (
                 <div className="flex flex-col md:flex-row h-full w-full">
-                    <div className="md:basis-3/5 grid place-items-center bg-slate-200 dark:bg-slate-600">
+                    <div className="md:basis-3/5 grid place-items-center bg-slate-200 dark:bg-slate-600 p-3 md:p-0">
                         <ReactCrop
                             crop={crop}
                             ruleOfThirds
@@ -271,7 +271,6 @@ export default function Cropper() {
                             />
                         </ReactCrop>
                     </div>
-
                     <div className="md:basis-2/5 flex flex-col gap-5 px-5 text-center bg-slate-100 dark:bg-slate-700">
                         <h2 className="text-2xl font-bold mt-3">Crop Options</h2>
                         <Separator />
