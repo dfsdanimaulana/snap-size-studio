@@ -120,56 +120,58 @@ export default function Cropper() {
         [completedCrop, scale, rotate, flip],
     )
 
-    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'horizontal' | 'vertical' | 'circle'
+    type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle'| 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical' 
 
     function handleToggleAspectClick(value: AspectRatio) {
-        setCircularCrop(value === 'circle' || value === 'custom_circle')
-
-        if (value === 'custom') {
-            setAspect(undefined)
-        } else if (value === 'custom_circle') {
+        const resetTransformations = () => {
             setScale(1)
             setRotate(0)
             setFlip({ horizontal: false, vertical: false })
-            setAspect(undefined)
-        } else if (value === 'square' || value === 'circle') {
-            if(value === 'circle') {
-              setScale(1)
-              setRotate(0)
-              setFlip({ horizontal: false, vertical: false })
-            }
-            setAspect(1 / 1)
+        }
+    
+        const setAspectAndCrop = (aspect: number) => {
+            setAspect(aspect)
+    
             if (imgRef.current) {
                 const { width, height } = imgRef.current
-
-                const newCrop = centerAspectCrop(width, height, 1 / 1)
+                const newCrop = centerAspectCrop(width, height, aspect)
                 setCrop(newCrop)
-                // Updates the preview
-                setCompletedCrop(convertToPixelCrop(newCrop, width, height))
-            }
-        } else if (value === 'horizontal') {
-            setAspect(16 / 9)
-            if (imgRef.current) {
-                const { width, height } = imgRef.current
-
-                const newCrop = centerAspectCrop(width, height, 16 / 9)
-                setCrop(newCrop)
-                // Updates the preview
-                setCompletedCrop(convertToPixelCrop(newCrop, width, height))
-            }
-        } else if (value === 'vertical') {
-            setAspect(9 / 16)
-            if (imgRef.current) {
-                const { width, height } = imgRef.current
-
-                const newCrop = centerAspectCrop(width, height, 9 / 16)
-                setCrop(newCrop)
-                // Updates the preview
                 setCompletedCrop(convertToPixelCrop(newCrop, width, height))
             }
         }
+    
+        setCircularCrop(value === 'circle' || value === 'custom_circle')
+    
+        switch (value) {
+            case 'custom':
+                setAspect(undefined)
+                break
+            case 'custom_circle':
+                resetTransformations()
+                setAspect(undefined)
+                break
+            case 'square':
+            case 'circle':
+                if (value === 'circle') resetTransformations()
+                setAspectAndCrop(1 / 1)
+                break
+            case 'short_horizontal':
+                setAspectAndCrop(5 / 4)
+                break
+            case 'short_vertical':
+                setAspectAndCrop(4 / 5)
+                break
+            case 'horizontal':
+                setAspectAndCrop(16 / 9)
+                break
+            case 'vertical':
+                setAspectAndCrop(9 / 16)
+                break
+            default:
+                break
+        }
     }
-
+    
     function handleCropWidthChange(e: React.ChangeEvent<HTMLInputElement>) {
         let { value } = e.target
 
@@ -340,11 +342,13 @@ export default function Cropper() {
                                       Aspect Ratio:{' '}
                                   </Label>
                                 </div>
-                                <div className="flex items-center justify-center gap-5">
+                                <div className="flex items-center justify-center gap-1 md:gap-5">
                                     {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
                                     {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
                                     {aspectButton('square', <Square />, '1 / 1')}
                                     {aspectButton('circle', <Circle />, 'Circle')}
+                                    {aspectButton('short_horizontal', <RectangleHorizontal />, '5 / 4')}
+                                    {aspectButton('short_vertical', <RectangleVertical />, '4 / 5')}
                                     {aspectButton('horizontal', <RectangleHorizontal />, '16 / 9')}
                                     {aspectButton('vertical', <RectangleVertical />, '9 / 16')}
                                 </div>
