@@ -28,8 +28,8 @@ export async function canvasPreview(
 
     canvas.width = Math.floor(crop.width * scaleX * pixelRatio)
     canvas.height = Math.floor(crop.height * scaleY * pixelRatio)
-    canvas.style.margin = "0"
-    canvas.style.padding = "0"
+    canvas.style.margin = '0'
+    canvas.style.padding = '0'
 
     ctx.scale(pixelRatio, pixelRatio)
     ctx.imageSmoothingQuality = 'high'
@@ -55,28 +55,28 @@ export async function canvasPreview(
     ctx.translate(-centerX, -centerY)
 
     if (circularCrop) {
-      if (crop.width === crop.height){
-        // Draw the circular crop
-        const radius = Math.min(crop.width*scaleX, crop.height*scaleY)/2
-        const x = cropX + radius
-        const y = cropY + radius
-        ctx.beginPath()
-        ctx.arc(x, y, radius, 0, 2 * Math.PI)
-        ctx.closePath()
-        ctx.clip()
-      } else {
-        // Draw ellipse crop
-        const radiusX = crop.width*scaleX/2
-        const radiusY = crop.height*scaleY/2
-        const x = cropX + radiusX
-        const y = cropY + radiusY
-        ctx.beginPath()
-        ctx.ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI)
-        ctx.closePath()
-        ctx.clip()
-      }
-    } 
-    
+        if (crop.width === crop.height) {
+            // Draw the circular crop
+            const radius = Math.min(crop.width * scaleX, crop.height * scaleY) / 2
+            const x = cropX + radius
+            const y = cropY + radius
+            ctx.beginPath()
+            ctx.arc(x, y, radius, 0, 2 * Math.PI)
+            ctx.closePath()
+            ctx.clip()
+        } else {
+            // Draw ellipse crop
+            const radiusX = (crop.width * scaleX) / 2
+            const radiusY = (crop.height * scaleY) / 2
+            const x = cropX + radiusX
+            const y = cropY + radiusY
+            ctx.beginPath()
+            ctx.ellipse(x, y, radiusX, radiusY, 0, 0, 2 * Math.PI)
+            ctx.closePath()
+            ctx.clip()
+        }
+    }
+
     ctx.drawImage(image, 0, 0, image.naturalWidth, image.naturalHeight, 0, 0, image.naturalWidth, image.naturalHeight)
 
     ctx.restore()
