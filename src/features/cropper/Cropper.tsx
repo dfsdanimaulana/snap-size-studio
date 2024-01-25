@@ -40,7 +40,7 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: numbe
     )
 }
 
-type ImageType = 'image/png' | 'image/jpeg' | 'image/webp'
+type ImageType = 'image/png' | 'image/jpeg' | 'image/jpg' | 'image/webp' | 'image/gif'
 
 type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
 
@@ -75,10 +75,15 @@ export default function Cropper() {
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
+          
+            const selectedFile = e.target.files[0]
+            
+            setImgType(selectedFile.type as ImageType)
+          
             setCrop(undefined) // Makes crop preview update between images.
             const reader = new FileReader()
             reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''))
-            reader.readAsDataURL(e.target.files[0])
+            reader.readAsDataURL(selectedFile)
         }
     }
 
@@ -374,8 +379,10 @@ export default function Cropper() {
                                     <SelectGroup>
                                         <SelectLabel>Image Type</SelectLabel>
                                         <SelectItem value="image/png">PNG</SelectItem>
+                                        <SelectItem value="image/jpg">JPG</SelectItem>
                                         <SelectItem value="image/jpeg">JPEG</SelectItem>
                                         <SelectItem value="image/webp">WEBP</SelectItem>
+                                        <SelectItem value="image/gif">GIF</SelectItem>
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
