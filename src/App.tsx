@@ -1,22 +1,36 @@
-import eruda from 'eruda'
+import { createBrowserRouter, RouterProvider } from 'react-router-dom'
+import Layout from './components/elements/layout'
 
+// features
+import Home from './features/home'
 import Cropper from './features/cropper'
-import Navbar from './components/elements/navbar'
-import Footer from './components/elements/footer'
+import Resizer from './features/resizer'
+import ErrorPage from './components/elements/error-page'
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: <Layout />,
+        errorElement: <ErrorPage />,
+        children: [
+            {
+                path: '/',
+                element: <Home />,
+            },
+            {
+                path: '/resizer',
+                element: <Resizer />,
+            },
+            {
+                path: '/cropper',
+                element: <Cropper />,
+            },
+        ],
+    },
+])
 
 function App() {
-    return (
-        <>
-          <div className="min-h-screen md:h-screen flex flex-col bg-slate-100 dark:bg-slate-800 text-slate-900 dark:text-slate-100">
-              <Navbar />
-              <div className="flex-1 flex items-center">
-                  <Cropper />
-              </div>
-              <Footer />
-          </div>
-          {import.meta.env.DEV && /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) && eruda.init()}
-        </>
-    )
+    return <RouterProvider router={router} />
 }
 
 export default App

@@ -1,10 +1,26 @@
+import { Link } from 'react-router-dom'
 import { ModeToggle } from '@/components/mode-toggle'
+import DesktopMenu from './DesktopMenu'
+import MobileMenu from './MobileMenu'
+import { Button } from '@/components/ui/button'
+import { Github } from 'lucide-react'
 
 export default function Navbar() {
     return (
-        <div className="flex w-full items-center bg-white dark:bg-slate-900 justify-between p-3 md:p-5 font-bold text-xl md:text-2xl shadow-md z-50">
-            <h1>SnapSizeStudio</h1>
-            <ModeToggle />
+        <div className="flex items-center justify-between bg-background p-3 md:p-5 font-bold text-xl md:text-2xl shadow-md z-50">
+            <h1>
+                <Link to="/">SnapSizeStudio</Link>
+            </h1>
+            <DesktopMenu />
+            <div className="flex items-center gap-3">
+                <Button size="icon" variant="outline" asChild>
+                    <a href="https://github.com/dfsdanimaulana/snap-size-studio" target="_blank">
+                        <Github />
+                    </a>
+                </Button>
+                <ModeToggle />
+                <MobileMenu />
+            </div>
         </div>
     )
 }

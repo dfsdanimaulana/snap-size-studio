@@ -75,11 +75,10 @@ export default function Cropper() {
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
-          
             const selectedFile = e.target.files[0]
-            
+
             setImgType(selectedFile.type as ImageType)
-          
+
             setCrop(undefined) // Makes crop preview update between images.
             const reader = new FileReader()
             reader.addEventListener('load', () => setImgSrc(reader.result?.toString() || ''))
@@ -382,7 +381,7 @@ export default function Cropper() {
                                         <SelectItem value="image/jpg">JPG</SelectItem>
                                         <SelectItem value="image/jpeg">JPEG</SelectItem>
                                         <SelectItem value="image/webp">WEBP</SelectItem>
-                                        <SelectItem value="image/gif">GIF</SelectItem>
+                                        {/* <SelectItem value="image/gif">GIF</SelectItem> */}
                                     </SelectGroup>
                                 </SelectContent>
                             </Select>
