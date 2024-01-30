@@ -4,7 +4,7 @@ import Layout from './components/elements/layout'
 // features
 import Home from './features/home'
 import Cropper from './features/cropper'
-import Resizer from './features/resizer'
+// import Resizer from './features/resizer'
 import ErrorPage from './components/elements/error-page'
 
 const router = createBrowserRouter([
@@ -17,10 +17,10 @@ const router = createBrowserRouter([
                 path: '/',
                 element: <Home />,
             },
-            {
-                path: '/resizer',
-                element: <Resizer />,
-            },
+            // {
+            //     path: '/resizer',
+            //     element: <Resizer />,
+            // },
             {
                 path: '/cropper',
                 element: <Cropper />,

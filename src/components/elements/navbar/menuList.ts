@@ -1,14 +1,14 @@
 export const menuList = [
     {
-        name: 'Home',
+        name: 'HOME',
         path: '/',
     },
     {
-        name: 'Cropper',
+        name: 'CROPPER',
         path: '/cropper',
     },
-    {
-        name: 'Resizer',
-        path: '/resizer',
-    },
+    // {
+    //     name: 'RESIZER',
+    //     path: '/resizer',
+    // },
 ]

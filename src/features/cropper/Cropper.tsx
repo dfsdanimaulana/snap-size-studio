@@ -2,6 +2,9 @@ import React, { useState, useRef, type ReactNode } from 'react'
 
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop, convertToPixelCrop } from 'react-image-crop'
 import { BoxSelect, Circle, CircleDashed, Loader2, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
+
+import type { ImageType, AspectRatio } from '@/type'
+
 import { canvasPreview } from './canvasPreview'
 import { useDebounceEffect } from '@/hooks/useDebounceEffect'
 
@@ -13,9 +16,7 @@ import { Separator } from '@/components/ui/separator'
 import { SelectImageType } from '@/components/ui/select-image-type'
 import { CropInputOption } from './CropInputOption'
 import { CropSwitchOption } from './CropSwitchOption'
-
-type ImageType = 'image/png' | 'image/jpeg' | 'image/jpg' | 'image/webp' | 'image/gif'
-type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
+import { Slider } from '@/components/ui/slider'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -71,6 +72,7 @@ export default function Cropper() {
     const [flip, setFlip] = useState({ horizontal: false, vertical: false })
     const [isLoading, setIsLoading] = useState(false)
     const [chosenAspect, setChosenAspect] = useState<AspectRatio>('square')
+    const [quality, setQuality] = useState(100)
 
     function onSelectFile(e: React.ChangeEvent<HTMLInputElement>) {
         if (e.target.files && e.target.files.length > 0) {
@@ -118,6 +120,7 @@ export default function Cropper() {
         // reduce image size
         const blob = await offscreen.convertToBlob({
             type: imgType,
+            quality: quality / 100,
         })
 
         if (blobUrlRef.current) {
@@ -279,7 +282,7 @@ export default function Cropper() {
                         <h2 className="text-2xl font-bold mt-3">Crop Options</h2>
                         <Separator />
                         <div className="flex-1 flex flex-col">
-                            <div className="flex mb-5">
+                            <div className="flex mb-7">
                                 <div className="basis-1/2 px-3 flex flex-col gap-2">
                                     <CropInputOption
                                         id="width-crop-input"
@@ -338,12 +341,33 @@ export default function Cropper() {
                                     />
                                 </div>
                             </div>
-                            <div className="px-3">
-                                <div className="flex items-center justify-between gap-3 pb-3">
-                                    <Label htmlFor="rotate-input" className="text-md flex mb-2">
-                                        Aspect Ratio:{' '}
+                            <div className="px-3 mb-5">
+                                <div className="flex items-center gap-3">
+                                    <Label htmlFor="rotate-input" className="text-md flex mb-2 basis-2/5">
+                                        Image Quality:
                                     </Label>
+                                    <Slider
+                                        defaultValue={[quality]}
+                                        min={10}
+                                        max={100}
+                                        step={1}
+                                        disabled={!['image/jpg', 'image/jpeg'].includes(imgType)}
+                                        className="basis-3/5"
+                                        onValueChange={(value) => setQuality(value[0])}
+                                    />
+                                    {`${quality}%`}
                                 </div>
+                                <div className="flex justify-end">
+                                    <span className="italic text-xs text-slate-400">
+                                        Change image type to JPEG/JPG to reduce image size
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="px-3">
+                                <Label htmlFor="rotate-input" className="text-md flex mb-2">
+                                    Aspect Ratio:{' '}
+                                </Label>
+
                                 <div className="flex items-center justify-center gap-1 md:gap-5">
                                     {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
                                     {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
@@ -369,7 +393,7 @@ export default function Cropper() {
                                     Download Crop
                                 </Button>
                             )}
-                            <SelectImageType imgType={ImageType} setImgType={setImgType} />
+                            <SelectImageType imgType={imgType} setImgType={setImgType} />
                             <a href="#hidden" ref={hiddenAnchorRef} download className="hidden">
                                 Hidden download
                             </a>

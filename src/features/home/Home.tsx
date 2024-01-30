@@ -12,9 +12,9 @@ export default function Home() {
                 <Button size="lg" asChild>
                     <Link to="/cropper">Cropper</Link>
                 </Button>
-                <Button size="lg" asChild>
+                {/* <Button size="lg" asChild>
                     <Link to="/resizer">Resizer</Link>
-                </Button>
+                </Button> */}
             </div>
         </div>
     )
