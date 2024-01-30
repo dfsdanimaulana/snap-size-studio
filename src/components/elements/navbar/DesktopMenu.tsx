@@ -17,9 +17,11 @@ export default function DesktopMenu() {
                     {menuList.map((menu) => {
                         return (
                             <NavigationMenuItem key={menu.name}>
-                                <Link to={menu.path}>
-                                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>{menu.name}</NavigationMenuLink>
-                                </Link>
+                                <NavigationMenuLink className={navigationMenuTriggerStyle()} asChild>
+                                    <Link to={menu.path}>
+                                        {menu.name}
+                                    </Link>
+                                </NavigationMenuLink>
                             </NavigationMenuItem>
                         )
                     })}

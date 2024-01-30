@@ -1,18 +1,21 @@
 import React, { useState, useRef, type ReactNode } from 'react'
 
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop, convertToPixelCrop } from 'react-image-crop'
+import { BoxSelect, Circle, CircleDashed, Loader2, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
 import { canvasPreview } from './canvasPreview'
-import { useDebounceEffect } from '../../hooks/useDebounceEffect'
+import { useDebounceEffect } from '@/hooks/useDebounceEffect'
 
 import 'react-image-crop/dist/ReactCrop.css'
 import { Button } from '@/components/ui/button'
 import { Label } from '@/components/ui/label'
-import { BoxSelect, Circle, CircleDashed, Loader2, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
 import { Tooltip, TooltipTrigger, TooltipContent } from '@/components/ui/tooltip'
 import { Separator } from '@/components/ui/separator'
+import { SelectImageType } from '@/components/ui/select-image-type'
 import { CropInputOption } from './CropInputOption'
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from '@/components/ui/select'
 import { CropSwitchOption } from './CropSwitchOption'
+
+type ImageType = 'image/png' | 'image/jpeg' | 'image/jpg' | 'image/webp' | 'image/gif'
+type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -39,10 +42,6 @@ function centerAspectCrop(mediaWidth: number, mediaHeight: number, aspect: numbe
         mediaHeight,
     )
 }
-
-type ImageType = 'image/png' | 'image/jpeg' | 'image/jpg' | 'image/webp' | 'image/gif'
-
-type AspectRatio = 'custom' | 'custom_circle' | 'square' | 'circle' | 'short_horizontal' | 'short_vertical' | 'horizontal' | 'vertical'
 
 const aspectRatioValues: Record<AspectRatio, number | undefined> = {
     custom: undefined,
@@ -370,21 +369,7 @@ export default function Cropper() {
                                     Download Crop
                                 </Button>
                             )}
-                            <Select onValueChange={(value: ImageType) => setImgType(value)} defaultValue={imgType}>
-                                <SelectTrigger className="w-[100px]">
-                                    <SelectValue placeholder="PNG" />
-                                </SelectTrigger>
-                                <SelectContent>
-                                    <SelectGroup>
-                                        <SelectLabel>Image Type</SelectLabel>
-                                        <SelectItem value="image/png">PNG</SelectItem>
-                                        <SelectItem value="image/jpg">JPG</SelectItem>
-                                        <SelectItem value="image/jpeg">JPEG</SelectItem>
-                                        <SelectItem value="image/webp">WEBP</SelectItem>
-                                        {/* <SelectItem value="image/gif">GIF</SelectItem> */}
-                                    </SelectGroup>
-                                </SelectContent>
-                            </Select>
+                            <SelectImageType imgType={ImageType} setImgType={setImgType} />
                             <a href="#hidden" ref={hiddenAnchorRef} download className="hidden">
                                 Hidden download
                             </a>
