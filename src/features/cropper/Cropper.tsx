@@ -341,7 +341,7 @@ export default function Cropper() {
                                     />
                                 </div>
                             </div>
-                            <div className="px-3 mb-5">
+                            <div className="px-3 mb-5 hidden">
                                 <div className="flex items-center gap-3">
                                     <Label htmlFor="rotate-input" className="text-md flex mb-2 basis-2/5">
                                         Image Quality:
@@ -359,7 +359,7 @@ export default function Cropper() {
                                 </div>
                                 <div className="flex justify-end">
                                     <span className="italic text-xs text-slate-400">
-                                        Change image type to JPEG/JPG to reduce image size
+                                        Change image type to JPEG/JPG to reduce image quality
                                     </span>
                                 </div>
                             </div>
