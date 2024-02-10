@@ -75,7 +75,7 @@
     }
 
     /* Scrollbar Styles */
-    html {
+    /* html {
         scrollbar-width: thin;
         scrollbar-color: #495670 #0a192f;
     }
@@ -89,5 +89,5 @@
         background-color: #495670;
         border: 3px solid #0a192f;
         border-radius: 10px;
-    }
+    } */
 }
