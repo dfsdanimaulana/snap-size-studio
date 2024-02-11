@@ -11,10 +11,10 @@ export default function Footer() {
         return false
     }
     return (
-        <div className="flex bg-white dark:bg-slate-900 text-slate-600 p-3 items-center justify-between text-xs tracking-wide border-t-1 z-50">
+        <div className="flex bg-white dark:bg-slate-900 p-3 text-slate-800 dark:text-slate-300 items-center justify-between text-xs tracking-wide border-t-1 z-50">
             <div>
                 © 2024 Created by{' '}
-                <a href="https://danfolio.vercel.app" target="_blank" className="ml-1 font-semibold text-slate-600">
+                <a href="https://danfolio.vercel.app" target="_blank" className="ml-1">
                     @dnm17_
                 </a>
             </div>
