@@ -1,5 +1,7 @@
 SnapSizeStudio 🖼️
 
+[![SnapSizeStudio](https://snap-size-studio.netlify.app/preview.png)](https://snap-size-studio.netlify.app)
+
 Effortless image editing powered by TypeScript, React JS, and Vite bundler. Crop and resize with precision for your creative vision. Your canvas, your rules.
 
 🚀 Fast | 🎨 Intuitive | 🌐 Online Image Editing
@@ -25,5 +27,3 @@ We welcome contributions! Check out our [Contribution Guidelines](CONTRIBUTING.m
 SnapSizeStudio is licensed under the [MIT License](LICENSE).
 
 ---
-
-[![SnapSizeStudio Logo](link-to-logo)](website-url)
