@@ -6,7 +6,7 @@ export default function Home() {
         <div className="flex flex-col gap-10 items-center text-center">
             <h1 className="text-4xl md:text-5xl font-bold">Welcome to SnapSizeStudio</h1>
             <p className="text-xl">
-                Your Go-To for Easy Image Cropping and Resizing! Elevate your photos in just a few clicks. Let simplicity meet creativity!
+                Effortless image editing. Crop and resize with precision for your creative vision. Your canvas, your rules.{' '}
             </p>
             <div className="flex items-center gap-5">
                 <Button size="lg" asChild>
