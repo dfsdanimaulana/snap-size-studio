@@ -3,7 +3,7 @@ import { ModeToggle } from '@/components/mode-toggle'
 import DesktopMenu from './DesktopMenu'
 import MobileMenu from './MobileMenu'
 import { Button } from '@/components/ui/button'
-import { Github } from 'lucide-react'
+import { Github, Mail } from 'lucide-react'
 
 export default function Navbar() {
     return (
@@ -15,15 +15,23 @@ export default function Navbar() {
                 </h1>
             </div>
             <DesktopMenu />
-            <div className="flex items-center gap-3">
+            <div className="hidden md:flex items-center gap-3">
+                <Button size="icon" variant="outline" asChild>
+                    <a
+                        href="mailto:danimaulana9f@gmail.com?subject=Hello%20Dani%20Maulana%20i%20like%20your%20website%20SnapSizeStudio"
+                        target="_blank"
+                    >
+                        <Mail />
+                    </a>
+                </Button>
                 <Button size="icon" variant="outline" asChild>
                     <a href="https://github.com/dfsdanimaulana/snap-size-studio" target="_blank">
                         <Github />
                     </a>
                 </Button>
                 <ModeToggle />
-                <MobileMenu />
             </div>
+            <MobileMenu />
         </div>
     )
 }

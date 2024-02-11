@@ -1,8 +1,9 @@
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from '@/components/ui/sheet'
-import { AlignRight } from 'lucide-react'
+import { AlignRight, Github, Mail } from 'lucide-react'
 import { menuList } from './menuList'
+import { ModeToggle } from '@/components/mode-toggle'
 
 export default function MobileMenu() {
     return (
@@ -23,6 +24,22 @@ export default function MobileMenu() {
                             </SheetClose>
                         )
                     })}
+                    <div className="flex items-center gap-3">
+                        <Button size="icon" variant="outline" asChild>
+                            <a
+                                href="mailto:danimaulana9f@gmail.com?subject=Hello%20Dani%20Maulana%20i%20like%20your%20website%20SnapSizeStudio"
+                                target="_blank"
+                            >
+                                <Mail />
+                            </a>
+                        </Button>
+                        <Button size="icon" variant="outline" asChild>
+                            <a href="https://github.com/dfsdanimaulana/snap-size-studio" target="_blank">
+                                <Github />
+                            </a>
+                        </Button>
+                        <ModeToggle />
+                    </div>
                 </SheetContent>
             </Sheet>
         </div>
