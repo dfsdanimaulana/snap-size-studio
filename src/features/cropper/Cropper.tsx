@@ -1,7 +1,17 @@
 import React, { useState, useRef, type ReactNode } from 'react'
 
 import ReactCrop, { centerCrop, makeAspectCrop, Crop, PixelCrop, convertToPixelCrop } from 'react-image-crop'
-import { BoxSelect, Circle, CircleDashed, Loader2, RectangleHorizontal, RectangleVertical, Square } from 'lucide-react'
+import {
+    BoxSelect,
+    Circle,
+    CircleDashed,
+    ImageDown,
+    ImagePlus,
+    Loader2,
+    RectangleHorizontal,
+    RectangleVertical,
+    Square,
+} from 'lucide-react'
 
 import type { ImageType, AspectRatio } from '@/type'
 
@@ -247,6 +257,7 @@ export default function Cropper() {
                     <h1 className="text-5xl tracking-wide font-bold py-5">Crop IMAGE</h1>
                     <Button size="lg" onClick={() => inputRef.current?.click()}>
                         Select Image
+                        <ImagePlus className="ml-3" />
                     </Button>
                     <input ref={inputRef} id="picture" type="file" accept="image/*" onChange={onSelectFile} className="hidden" />
                 </div>
@@ -391,6 +402,7 @@ export default function Cropper() {
                             ) : (
                                 <Button onClick={onDownloadCropClick} size="lg" className="text-lg">
                                     Download Crop
+                                    <ImageDown className="ml-3" />
                                 </Button>
                             )}
                             <SelectImageType imgType={imgType} setImgType={setImgType} />

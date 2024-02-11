@@ -47,6 +47,11 @@ module.exports = {
                     foreground: 'hsl(var(--card-foreground))',
                 },
             },
+            fontFamily: {
+                primary: ['Poppins', 'sans-serif'],
+                mono: ['Chivo Mono', 'sans-serif'],
+                sans: ['Open Sans', 'sans-serif'],
+            },
             borderRadius: {
                 lg: 'var(--radius)',
                 md: 'calc(var(--radius) - 2px)',

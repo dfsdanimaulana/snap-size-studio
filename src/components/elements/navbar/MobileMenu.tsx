@@ -17,9 +17,9 @@ export default function MobileMenu() {
                     {menuList.map((menu) => {
                         return (
                             <SheetClose key={menu.name} asChild>
-                              <Button variant="link" asChild className="text-xl">
-                                  <Link to={menu.path}>{menu.name}</Link>
-                              </Button>
+                                <Button variant="link" asChild className="text-xl font-mono tracking-widest">
+                                    <Link to={menu.path}>{menu.name}</Link>
+                                </Button>
                             </SheetClose>
                         )
                     })}

@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Crop } from 'lucide-react'
 import { Link } from 'react-router-dom'
 
 export default function Home() {
@@ -10,7 +11,10 @@ export default function Home() {
             </p>
             <div className="flex items-center gap-5">
                 <Button size="lg" asChild>
-                    <Link to="/cropper">Cropper</Link>
+                    <Link to="/cropper">
+                        Cropper
+                        <Crop className="ml-3" />
+                    </Link>
                 </Button>
                 {/* <Button size="lg" asChild>
                     <Link to="/resizer">Resizer</Link>
