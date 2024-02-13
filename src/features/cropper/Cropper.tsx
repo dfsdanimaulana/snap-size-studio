@@ -27,6 +27,7 @@ import { SelectImageType } from '@/components/ui/select-image-type'
 import { CropInputOption } from './CropInputOption'
 import { CropSwitchOption } from './CropSwitchOption'
 import { Slider } from '@/components/ui/slider'
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectGroup, SelectLabel, SelectItem } from '@/components/ui/select'
 
 // This is to demonstrate how to make and center a % aspect crop
 // which is a bit trickier so we use some helper functions.
@@ -59,10 +60,15 @@ const aspectRatioValues: Record<AspectRatio, number | undefined> = {
     custom_circle: undefined,
     square: 1,
     circle: 1,
-    short_horizontal: 5 / 4,
-    short_vertical: 4 / 5,
+    landscape: 5 / 4,
+    portrait: 4 / 5,
     horizontal: 16 / 9,
     vertical: 9 / 16,
+    grid: 1.91 / 1,
+    header: 3 / 1,
+    board: 20 / 9,
+    cover: 4 / 1,
+    pint: 2 / 3,
 }
 
 export default function Cropper() {
@@ -225,6 +231,13 @@ export default function Cropper() {
         setCrop({ ...crop, y: Number(value) } as Crop)
     }
 
+    function setAspectRatio(value: string) {
+        const aspect = value.split(':')[1] as AspectRatio
+
+        setChosenAspect(aspect)
+        handleToggleAspectClick(aspect)
+    }
+
     function aspectButton(asp: AspectRatio, icon: ReactNode, tooltipText: string) {
         const handleClick = () => {
             setChosenAspect(asp)
@@ -380,14 +393,46 @@ export default function Cropper() {
                                 </Label>
 
                                 <div className="flex items-center justify-center gap-1 md:gap-5">
-                                    {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
-                                    {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
-                                    {aspectButton('square', <Square />, '1 / 1')}
-                                    {aspectButton('circle', <Circle />, 'Circle')}
-                                    {aspectButton('short_horizontal', <RectangleHorizontal />, '5 / 4')}
-                                    {aspectButton('short_vertical', <RectangleVertical />, '4 / 5')}
-                                    {aspectButton('horizontal', <RectangleHorizontal width={20} />, '16 / 9')}
-                                    {aspectButton('vertical', <RectangleVertical width={20} />, '9 / 16')}
+                                    <div className="flex items-center justify-around basis-2/5">
+                                        {aspectButton('square', <Square />, '1 / 1')}
+                                        {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
+                                        {aspectButton('circle', <Circle />, 'Circle')}
+                                        {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
+                                    </div>
+                                    <div className="flex basis-3/5">
+                                        <Select onValueChange={setAspectRatio}>
+                                            <SelectTrigger className="w-full">
+                                                <SelectValue placeholder="Other Aspect Ratio" />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                <SelectGroup>
+                                                    <SelectLabel>Aspect Ratio</SelectLabel>
+                                                    <SelectItem value="fa:square">Facebook Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="fa:horizontal">Facebook Cover Photo (16:9)</SelectItem>
+                                                    <SelectItem value="ins:square">Instagram Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="ins:grid">Instagram Post Grid (1.91:1)</SelectItem>
+                                                    <SelectItem value="ins:portrait">Instagram Post Portrait (4:5)</SelectItem>
+                                                    <SelectItem value="ins:vertical">Instagram Story (9:16)</SelectItem>
+                                                    <SelectItem value="twit:square">Twitter Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="twit:header">Twitter Header Photo (3:1)</SelectItem>
+                                                    <SelectItem value="link:square">LinkedIn Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="link:cover">LinkedIn Cover Photo (4:1)</SelectItem>
+                                                    <SelectItem value="link:grid">LinkedIn Link Preview (1.91:1)</SelectItem>
+                                                    <SelectItem value="link:horizontal">LinkedIn Post (16:9)</SelectItem>
+                                                    <SelectItem value="pint:pint">Pinterest Pin (2:3)</SelectItem>
+                                                    <SelectItem value="pint:board">Pinterest Board Cover (20:9)</SelectItem>
+                                                    <SelectItem value="ytc:horizontal">YouTube Channel Cover (16:9)</SelectItem>
+                                                    <SelectItem value="ytt:horizontal">YouTube Video Thumbnail (16:9)</SelectItem>
+                                                    <SelectItem value="snap:vertical">Snapchat Story (9:16)</SelectItem>
+                                                    <SelectItem value="tik:square">TikTok Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="tik:vertical">TikTok Video (9:16)</SelectItem>
+                                                    <SelectItem value="wa:square">WhatsApp Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="tmb:square">Tumblr Profile Picture (1:1)</SelectItem>
+                                                    <SelectItem value="tmb:horizontal">Tumblr Post (16:9)</SelectItem>
+                                                </SelectGroup>
+                                            </SelectContent>
+                                        </Select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
