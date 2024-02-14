@@ -8,8 +8,6 @@ import {
     ImageDown,
     ImagePlus,
     Loader2,
-    RectangleHorizontal,
-    RectangleVertical,
     Square,
 } from 'lucide-react'
 
