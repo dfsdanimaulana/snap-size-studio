@@ -390,14 +390,14 @@ export default function Cropper() {
                                     Aspect Ratio:{' '}
                                 </Label>
 
-                                <div className="flex items-center justify-center gap-1 md:gap-5">
-                                    <div className="flex items-center justify-around basis-2/5">
+                                <div className="flex flex-col md:flex-row md:items-center justify-center gap-3 md:gap-1 md:gap-5">
+                                    <div className="flex items-center justify-around md:basis-2/5">
                                         {aspectButton('square', <Square />, '1 / 1')}
                                         {aspectButton('custom', <BoxSelect />, 'Custom Rectangle')}
                                         {aspectButton('circle', <Circle />, 'Circle')}
                                         {aspectButton('custom_circle', <CircleDashed />, 'Custom Circle')}
                                     </div>
-                                    <div className="flex basis-3/5">
+                                    <div className="flex md:basis-3/5">
                                         <Select onValueChange={setAspectRatio}>
                                             <SelectTrigger className="w-full">
                                                 <SelectValue placeholder="Other Aspect Ratio" />
